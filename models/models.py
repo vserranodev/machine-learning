@@ -58,7 +58,7 @@ class LinearModel(nn.Module):
 
 
 if __name__ == "__main__":
-    data = None
+    X = None
     model = LinearModel(input_size=(20,10))
     model.train(lossfun=model.MeanSquaredError, epochs=100, optimizer = Optimizers.Adam.value(model.parameters(), lr=0.01), data=data)
     y_preds = model(X)
