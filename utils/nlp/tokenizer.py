@@ -20,10 +20,10 @@ class BPETokenizer():
         string = b"".join(bytes_list).decode("utf-8") 
         return string
 
-def get_compression_ratio(string: str, indices: list[int]) -> float:
-    """Given `string` that has been tokenized into `indices`, ."""
-    num_bytes = len(bytes(string, encoding="utf-8")) 
-    return num_bytes / num_tokens
+# def get_compression_ratio(string: str, indices: list[int]) -> float:
+#     """Given `string` that has been tokenized into `indices`, ."""
+#     num_bytes = len(bytes(string, encoding="utf-8")) 
+#     return num_bytes / num_tokens
 
 def merge(indices: list[int], pair: tuple[int, int], new_index: int) -> list[int]:  
     """Return `indices`, but with all instances of `pair` replaced with `new_index`."""
