@@ -77,16 +77,27 @@ class LossFunction(Enum):
         return self.value[1]
 
 
+class WeightInitializer(Enum):
+    Normal = (lambda input_size, num_neurons: np.random.randn(input_size, num_neurons) * 0.01, )
+    RandomNormal = (lambda input_size, num_neurons: np.random.randn(input_size, num_neurons), )
+    He = (lambda input_size, num_neurons: np.random.randn(input_size, num_neurons) * np.sqrt(2.0 / input_size), )
+    Xavier = (lambda input_size, num_neurons: np.random.randn(input_size, num_neurons) * np.sqrt(1.0 / input_size), )
+
+    @property
+    def initializer(self):
+        return self.value[0]
+
+
 class LinearLayer():
     ##Assuming first dim as features
-    def __init__(self, input_size, num_neurons: int, activation_function: ActivationFunction):
+    def __init__(self, input_size, num_neurons: int, activation_function: ActivationFunction, weight_initializer: WeightInitializer):
         self.input = None
         self.input_size: tuple = input_size
         self.num_neurons = num_neurons
         self.activation_function = activation_function.function
         self.activation_function_derivative = activation_function.derivative
         #self.weights = np.random.randn(input_size, num_neurons) * 0.01
-        self.weights = np.random.randn(input_size, num_neurons) * np.sqrt(2.0 / input_size)
+        self.weights = weight_initializer.initializer(input_size, num_neurons)
         self.bias = np.zeros((self.num_neurons, 1))
         self.Z = None
         self.A = None
@@ -201,31 +212,47 @@ if __name__ == "__main__":
 
     hidden_layer_1 = LinearLayer(
         input_size=num_features, 
-        num_neurons=32, 
-        activation_function=ActivationFunction.ReLU
+        num_neurons=128, 
+        activation_function=ActivationFunction.ReLU,
+        weight_initializer=WeightInitializer.He
     )
     hidden_layer_2 = LinearLayer(
-        input_size=32, 
-        num_neurons=16, 
-        activation_function=ActivationFunction.ReLU
+        input_size=128, 
+        num_neurons=64, 
+        activation_function=ActivationFunction.ReLU,
+        weight_initializer=WeightInitializer.He
     )
     hidden_layer_3 = LinearLayer(
-        input_size=16, 
-        num_neurons=8, 
-        activation_function=ActivationFunction.ReLU
+        input_size=64, 
+        num_neurons=32, 
+        activation_function=ActivationFunction.ReLU,
+        weight_initializer=WeightInitializer.He
     )
 
+    hidden_layer_4 = LinearLayer(
+        input_size=32, 
+        num_neurons=16, 
+        activation_function=ActivationFunction.ReLU,
+        weight_initializer=WeightInitializer.He
+    )
+    hidden_layer_5 = LinearLayer(
+        input_size=16, 
+        num_neurons=8, 
+        activation_function=ActivationFunction.ReLU,
+        weight_initializer=WeightInitializer.He
+    )
     # Last layer has 10 neurons,, so this layer receives 10
     output_layer = LinearLayer(
         input_size=8, 
         num_neurons=1, 
-        activation_function=ActivationFunction.Linear
+        activation_function=ActivationFunction.Linear,
+        weight_initializer=WeightInitializer.Normal
     )
 
     # Train
     model = SequentialModel(
         loss_function=LossFunction.MSE, 
-        layers=[hidden_layer_1, hidden_layer_2, hidden_layer_3, output_layer]
+        layers=[hidden_layer_1, hidden_layer_2, hidden_layer_3, hidden_layer_4, hidden_layer_5, output_layer]
         )
 
     history = model.train(X_train, y_train, epochs=200, learning_rate=0.01, batch_size=32)

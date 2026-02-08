@@ -3,8 +3,12 @@
 ```
 ml-projects/
 ├── models/
-│   └── models.py              # Feedforward neural network from scratch with NumPy
-│                                 (activations, losses, layers, backprop and mini-batch training)
+│   ├── scratch/
+│   │   └── models.py          # Neural networks from scratch
+│   │                            (activations, losses, layers, backprop and mini-batch training)
+|
+│   └── torch/
+│       └── models.py          # Neural network models with PyTorch
 
 ├── system_dynamics/
 │   └── state.py               # Dynamic systems modeling with states, dimensions and actions
