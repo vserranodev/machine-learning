@@ -2,9 +2,14 @@ import numpy as np
 from enum import Enum
 
 class ActivationFunction(Enum):
-    ### Activation function and derivative in tuple form for backprop
-    ### self.activation_function = self.activation_function.value[0]
-    ### self.activation_function_derivative = self.activation_function.value[1]
+    ### Activation function and derivative in tuple form for backprop --> (act_fun, derivative)
+
+    Linear = (
+        #Activation function
+        lambda z: z,
+        #Derivative of activation function
+        lambda z: np.ones_like(z)
+        )
 
     ReLU = (
         #Activation function
@@ -80,7 +85,8 @@ class LinearLayer():
         self.num_neurons = num_neurons
         self.activation_function = activation_function.function
         self.activation_function_derivative = activation_function.derivative
-        self.weights = np.random.randn(input_size, num_neurons) * 0.01
+        #self.weights = np.random.randn(input_size, num_neurons) * 0.01
+        self.weights = np.random.randn(input_size, num_neurons) * np.sqrt(2.0 / input_size)
         self.bias = np.zeros((self.num_neurons, 1))
         self.Z = None
         self.A = None
@@ -113,7 +119,7 @@ class LinearLayer():
         return prev_layer_dA
 
 
-class LinearModel():
+class SequentialModel():
     def __init__(self, 
         loss_function: LossFunction, 
         layers: list[LinearLayer]):
@@ -145,7 +151,6 @@ class LinearModel():
         loss_history = []
         epoch_idx = 0
 
-
         for epoch in range(epochs):
             epoch_idx += 1
             epoch_loss = 0.0
@@ -168,7 +173,7 @@ class LinearModel():
 
 
 if __name__ == "__main__":
-    
+
     ## Testing it out
     from sklearn.datasets import fetch_california_housing
     from sklearn.model_selection import train_test_split
@@ -192,34 +197,46 @@ if __name__ == "__main__":
     X_train, X_test = X_train.T, X_test.T
     y_train, y_test = y_train.T, y_test.T
 
-    num_features = X_train.shape[0] # Esto debería ser 8
+    num_features = X_train.shape[0] #Should be 8
 
-    capa_oculta = LinearLayer(
+    hidden_layer_1 = LinearLayer(
         input_size=num_features, 
-        num_neurons=10, 
+        num_neurons=32, 
+        activation_function=ActivationFunction.ReLU
+    )
+    hidden_layer_2 = LinearLayer(
+        input_size=32, 
+        num_neurons=16, 
+        activation_function=ActivationFunction.ReLU
+    )
+    hidden_layer_3 = LinearLayer(
+        input_size=16, 
+        num_neurons=8, 
         activation_function=ActivationFunction.ReLU
     )
 
     # Last layer has 10 neurons,, so this layer receives 10
-    capa_salida = LinearLayer(
-        input_size=10, 
+    output_layer = LinearLayer(
+        input_size=8, 
         num_neurons=1, 
-        activation_function=ActivationFunction.ReLU 
+        activation_function=ActivationFunction.Linear
     )
 
     # Train
-    model = LinearModel(loss_function=LossFunction.MSE, layers=[capa_oculta, capa_salida])
+    model = SequentialModel(
+        loss_function=LossFunction.MSE, 
+        layers=[hidden_layer_1, hidden_layer_2, hidden_layer_3, output_layer]
+        )
 
-    print(f"Iniciando entrenamiento con {X_train.shape[1]} muestras...")
-    history = model.train(X_train, y_train, epochs=50, learning_rate=0.01, batch_size=32)
+    history = model.train(X_train, y_train, epochs=200, learning_rate=0.01, batch_size=32)
 
     # Evaluation
-    pred = model.forward_propagation(X_test[:, :5])
+    pred = model.forward_propagation(X_test[:, :15])
 
     print("\n" + "="*35)
-    print(f"{'REAL':<15} | {'PREDICCIÓN':<15}")
+    print(f"{'REAL':<15} | {'PREDICTION':<15}")
     print("-" * 35)
 
-    for r, p in zip(y_test[0, :5], pred.flatten()):
+    for r, p in zip(y_test[0, :15], pred.flatten()):
         print(f"{r:<15.4f} | {p:<15.4f}")
     print("="*35)
