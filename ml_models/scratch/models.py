@@ -185,7 +185,7 @@ class SequentialModel():
 
 if __name__ == "__main__":
 
-    ## Testing it out
+    ## Testing out the SequentialModel
     from sklearn.datasets import fetch_california_housing
     from sklearn.model_selection import train_test_split
     from sklearn.preprocessing import StandardScaler
@@ -194,16 +194,13 @@ if __name__ == "__main__":
     data = fetch_california_housing()
     X, y = data.data, data.target # X: (20640, 8), y: (20640,)
 
+    y = y.reshape(-1, 1) 
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X) # (20640, 8)
-
-    # Transposing to get (features, examples)
-    X_scaled = X_scaled.T 
-    y = y.reshape(1, -1) 
-
-    # Divide into train and test
-    # Note: train_test_split likes (examples, features), so we transpose and then we change again
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled.T, y.T, test_size=0.2, random_state=42)
+    X_train = scaler.fit_transform(X_train) 
+    X_test = scaler.transform(X_test)        
 
     X_train, X_test = X_train.T, X_test.T
     y_train, y_test = y_train.T, y_test.T

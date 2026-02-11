@@ -5,3 +5,10 @@ torch
 matplotlib
 scikit-learn
 torchmetrics
+pytest
+transformers
+datasets
+fastapi
+uvicorn
+click
+pydantic
