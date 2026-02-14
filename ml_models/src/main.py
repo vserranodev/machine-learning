@@ -11,6 +11,13 @@ class ActivationFunction(Enum):
         lambda z: np.ones_like(z)
         )
 
+    Absolute = (
+        #Activation function
+        lambda z: np.abs(z),
+        #Derivative of activation function
+        lambda z: np.sign(z)
+    )
+
     ReLU = (
         #Activation function
         lambda z: np.maximum(0, z),
@@ -86,7 +93,6 @@ class WeightInitializer(Enum):
     @property
     def initializer(self):
         return self.value[0]
-
 
 class LinearLayer():
     ##Assuming first dim as features
@@ -210,33 +216,33 @@ if __name__ == "__main__":
     hidden_layer_1 = LinearLayer(
         input_size=num_features, 
         num_neurons=128, 
-        activation_function=ActivationFunction.ReLU,
-        weight_initializer=WeightInitializer.He
+        activation_function=ActivationFunction.Absolute,
+        weight_initializer=WeightInitializer.Normal
     )
     hidden_layer_2 = LinearLayer(
         input_size=128, 
         num_neurons=64, 
-        activation_function=ActivationFunction.ReLU,
-        weight_initializer=WeightInitializer.He
+        activation_function=ActivationFunction.Absolute,
+        weight_initializer=WeightInitializer.Normal
     )
     hidden_layer_3 = LinearLayer(
         input_size=64, 
         num_neurons=32, 
-        activation_function=ActivationFunction.ReLU,
-        weight_initializer=WeightInitializer.He
+        activation_function=ActivationFunction.Absolute,
+        weight_initializer=WeightInitializer.Normal
     )
 
     hidden_layer_4 = LinearLayer(
         input_size=32, 
         num_neurons=16, 
-        activation_function=ActivationFunction.ReLU,
-        weight_initializer=WeightInitializer.He
+        activation_function=ActivationFunction.Absolute,
+        weight_initializer=WeightInitializer.Normal
     )
     hidden_layer_5 = LinearLayer(
         input_size=16, 
         num_neurons=8, 
-        activation_function=ActivationFunction.ReLU,
-        weight_initializer=WeightInitializer.He
+        activation_function=ActivationFunction.Absolute,
+        weight_initializer=WeightInitializer.Normal
     )
     # Last layer has 10 neurons,, so this layer receives 10
     output_layer = LinearLayer(
@@ -252,7 +258,7 @@ if __name__ == "__main__":
         layers=[hidden_layer_1, hidden_layer_2, hidden_layer_3, hidden_layer_4, hidden_layer_5, output_layer]
         )
 
-    history = model.train(X_train, y_train, epochs=200, learning_rate=0.01, batch_size=32)
+    history = model.train(X_train, y_train, epochs=100, learning_rate=0.01, batch_size=32)
 
     # Evaluation
     pred = model.forward_propagation(X_test[:, :15])

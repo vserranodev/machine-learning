@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Response
 from pydantic import BaseModel
-from ml_models.scratch.models import SequentialModel
+from ml_models.src.main import SequentialModel
 
 app = FastAPI()
 

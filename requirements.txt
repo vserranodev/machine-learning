@@ -1,4 +1,3 @@
-kagglehub
 numpy
 pandas
 torch
@@ -6,9 +5,11 @@ matplotlib
 scikit-learn
 torchmetrics
 pytest
-transformers
-datasets
+pytest-cov
+pylint
 fastapi
 uvicorn
 click
 pydantic
+ipython
+graphviz

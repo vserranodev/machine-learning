@@ -11,8 +11,6 @@ env/
 secrets.json
 
 # Datos (pueden ser grandes o privados)
-data/
-datasets/
 *.csv
 *.parquet
 *.h5
