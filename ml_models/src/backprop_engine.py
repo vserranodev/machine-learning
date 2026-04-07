@@ -174,26 +174,35 @@ class NN:
 
 if __name__ == "__main__":
 
-    model = NN(3, [4,4,1])
-    X = [
-        [2.0,1.5,-1.0],
-        [2.0, -1.0, 0.5],
-        [1.0,1.0,-1.0],
-        [2.1, 1.4, -1.2]
-    ]
-    y = [0.5,-1.0,-0.8,0.25]
+    el = Element(4.0, label="4")
+    el_2 = Element(5.0, label="5")
 
-    epochs = 100
-    for epoch in range(epochs):
-        ypred = [model(x) for x in X]
-        loss = sum((y_pred - y)**2 for y, y_pred in zip(y, ypred))
+    num = 4.0
 
-        for parameter in model.parameters():
-            parameter.gradient = 0.0
+    #print(el + el_2)
 
-        loss.backprop()
+    print(f"1 : {num + el}")
 
-        for parameter in model.parameters():
-            parameter.data += -0.05 * parameter.gradient
+    # model = NN(3, [4,4,1])
+    # X = [
+    #     [2.0,1.5,-1.0],
+    #     [2.0, -1.0, 0.5],
+    #     [1.0,1.0,-1.0],
+    #     [2.1, 1.4, -1.2]
+    # ]
+    # y = [0.5,-1.0,-0.8,0.25]
+
+    # epochs = 100
+    # for epoch in range(epochs):
+    #     ypred = [model(x) for x in X]
+    #     loss = sum((y_pred - y)**2 for y, y_pred in zip(y, ypred))
+
+    #     for parameter in model.parameters():
+    #         parameter.gradient = 0.0
+
+    #     loss.backprop()
+
+    #     for parameter in model.parameters():
+    #         parameter.data += -0.05 * parameter.gradient
         
-        print(epoch, loss.data)
+    #     print(epoch, loss.data)
